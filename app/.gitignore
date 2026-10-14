@@ -1,0 +1,11 @@
+data/*
+!data/emails.json
+!data/manifest.example.json
+!data/attachments/
+data/attachments/*
+!data/attachments/.gitkeep
+!data/raw/
+data/raw/*
+!data/raw/.gitkeep
+__pycache__/
+*.png

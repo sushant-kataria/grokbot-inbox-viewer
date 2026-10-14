@@ -1,0 +1,20 @@
+{
+  "inbox": "your-bot@example.com",
+  "synced_at_ist": "01 Jan 2026, 09:00 AM",
+  "messages": [
+    {"id": "example-0002", "thread_id": "thread-example-2", "folder": "inbox",
+     "from_name": "Example Sender", "from_email": "sender@example.com", "to": ["your-bot@example.com"],
+     "subject": "Welcome to Inbox Viewer (sample message)",
+     "date_iso": "2026-01-01T09:00:00+00:00", "date_ist": "01 Jan 2026, 09:00 AM",
+     "snippet": "This is a fake example message. Ask Grok Bot to 'refresh inbox' to replace it with your real mail.",
+     "body_text": "This is a fake example message.\n\nAsk Grok Bot to 'refresh inbox' to replace it with your real mail.",
+     "body_html": null, "attachments": [], "unread": true},
+    {"id": "example-0001", "thread_id": "thread-example-1", "folder": "sent",
+     "from_name": "Your Bot", "from_email": "your-bot@example.com", "to": ["friend@example.org"],
+     "subject": "Sample sent message",
+     "date_iso": "2025-12-31T18:30:00+00:00", "date_ist": "31 Dec 2025, 06:30 PM",
+     "snippet": "Another fake example so the Sent folder is not empty.",
+     "body_text": "Another fake example so the Sent folder is not empty.",
+     "body_html": null, "attachments": [], "unread": false}
+  ]
+}

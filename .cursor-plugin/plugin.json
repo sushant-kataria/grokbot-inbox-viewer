@@ -1,0 +1,12 @@
+{
+  "name": "grokbot-inbox-viewer",
+  "version": "1.0.0",
+  "description": "Gmail-style web viewer for a Grok Bot email inbox: read, search, view attachments, and queue compose/delete requests that Grok Bot only carries out after you approve them in chat. Optional Tailscale access from phone or laptop.",
+  "author": { "name": "Sushant Kataria" },
+  "homepage": "https://github.com/sushant-kataria/grokbot-inbox-viewer",
+  "repository": "https://github.com/sushant-kataria/grokbot-inbox-viewer",
+  "license": "MIT",
+  "keywords": ["email", "inbox", "grok-bot", "tailscale", "web-ui", "approval"],
+  "logo": "assets/logo.svg",
+  "skills": ["skills/email-inbox-viewer", "skills/inbox-viewer-getting-started"]
+}

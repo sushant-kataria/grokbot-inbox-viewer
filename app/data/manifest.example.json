@@ -1,0 +1,4 @@
+{"inbox": "your-bot@example.com", "messages": [
+  {"id": "example-0002", "thread_id": "thread-example-2", "folder": "inbox", "from_name": "Example Sender",
+   "from_email": "sender@example.com", "subject": "Welcome to Inbox Viewer (sample message)",
+   "date_utc": "2026-01-01T09:00:00Z", "attachments": [], "unread": true}]}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mail</title>
+  <script>
+    (function () {
+      var theme = "light";
+      try {
+        var stored = localStorage.getItem("theme");
+        if (stored === "light" || stored === "dark") theme = stored;
+        else if (window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="title-row">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">M</div>
+        <div class="brand-text">
+          <h1>Mail</h1>
+          <p id="inbox-addr">Loading…</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="refresh" class="btn" type="button" aria-label="Refresh">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+          <span class="btn-label">Refresh</span>
+        </button>
+        <button id="compose" class="btn" type="button" aria-label="Compose">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"/></svg>
+          <span class="btn-label">Compose</span>
+        </button>
+        <button id="theme-toggle" class="btn" type="button" aria-label="Toggle color theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+    <label class="search">
+      <span class="sr">Search mail</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Search mail" autocomplete="off">
+    </label>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Folders">
+      <button type="button" class="folder active" data-folder="inbox">
+        <span>Inbox</span>
+        <span id="count-inbox" class="count">0</span>
+      </button>
+      <button type="button" class="folder" data-folder="sent">
+        <span>Sent</span>
+        <span id="count-sent" class="count">0</span>
+      </button>
+    </nav>
+    <section id="list" class="list" aria-label="Messages"></section>
+    <article id="reader" class="reader" aria-live="polite"></article>
+  </div>
+  <div id="compose-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="compose-title">
+    <div class="modal-backdrop" data-close></div>
+    <form id="compose-form" class="modal-card">
+      <div class="modal-head">
+        <h2 id="compose-title">Compose</h2>
+        <button type="button" class="btn icon-btn" id="compose-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <label class="field">
+        <span>To</span>
+        <input name="to" type="text" autocomplete="email">
+      </label>
+      <label class="field">
+        <span>Cc</span>
+        <input name="cc" type="text" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>Subject</span>
+        <input name="subject" type="text" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>Body</span>
+        <textarea name="body" rows="8"></textarea>
+      </label>
+      <p id="compose-status" class="form-status" role="status"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="compose-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="compose-submit">Submit</button>
+      </div>
+    </form>
+  </div>
+  <div id="delete-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="delete-title">
+    <div class="modal-backdrop" data-close-delete></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="delete-title">Delete this message?</h2>
+        <button type="button" class="btn icon-btn" id="delete-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <p id="delete-subject" class="delete-subject"></p>
+      <p class="delete-note">It will be queued for approval. The message stays in your mail until you confirm.</p>
+      <p id="delete-status" class="form-status" role="status"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="delete-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="delete-confirm">Delete</button>
+      </div>
+    </div>
+  </div>
+  <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Attachment preview">
+    <div class="lightbox-bar">
+      <a id="lightbox-open" href="" target="_blank" rel="noopener">Open original</a>
+      <button type="button" class="btn icon-btn" id="lightbox-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <img id="lightbox-img" alt="">
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
